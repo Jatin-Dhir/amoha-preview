@@ -527,8 +527,8 @@ button{font:inherit;border-radius:0;}
     <defs>
       <path id="inscPath" d="M200,839 A569.2,569.2 0 0 1 720,272 A569.2,569.2 0 0 1 1240,839" fill="none"></path>
     </defs>
-    <text class="insc-t"><textPath id="inscL" href="#inscPath" startOffset="44%" text-anchor="end">ROOTED IN NATURE</textPath></text>
-    <text class="insc-t"><textPath id="inscR" href="#inscPath" startOffset="56%">BUILT TO ENDURE</textPath></text>
+    <text class="insc-t"><textPath id="inscL" href="#inscPath" startOffset="40%" text-anchor="end">ROOTED IN NATURE</textPath></text>
+    <text class="insc-t"><textPath id="inscR" href="#inscPath" startOffset="60%">BUILT TO ENDURE</textPath></text>
   </svg>
 
   <div class="scrim" id="scrim"></div>
@@ -719,8 +719,8 @@ button{font:inherit;border-radius:0;}
       <defs>
         <path id="inscPath2" d="M200,839 A569.2,569.2 0 0 1 720,272 A569.2,569.2 0 0 1 1240,839" fill="none"></path>
       </defs>
-      <text class="insc-t"><textPath id="inscL2" href="#inscPath2" startOffset="44%" text-anchor="end">EXPERIENCE</textPath></text>
-      <text class="insc-t"><textPath id="inscR2" href="#inscPath2" startOffset="56%">PURE ELEGANCE</textPath></text>
+      <text class="insc-t"><textPath id="inscL2" href="#inscPath2" startOffset="40%" text-anchor="end">EXPERIENCE</textPath></text>
+      <text class="insc-t"><textPath id="inscR2" href="#inscPath2" startOffset="60%">PURE ELEGANCE</textPath></text>
     </svg>
 
     <div class="lockup" id="plock">
@@ -886,10 +886,11 @@ button{font:inherit;border-radius:0;}
            ' L' + (L + W) + ',' + B;
   }
 
-  function inscriptionPath(W, apexY, off) {   // the same semicircle, offset outward: the text hugs it
-    var cx = G.vw / 2, cy = apexY + W / 2, Ri = W / 2 + off;
-    return 'M' + (cx - Ri) + ',' + cy +
-           ' A' + Ri + ',' + Ri + ' 0 0 1 ' + (cx + Ri) + ',' + cy;
+  function inscriptionPath(W, apexY, off) {   // the offset semicircle with straight tails: the text hugs it and starts lower
+    var cx = G.vw / 2, cy = apexY + W / 2, Ri = W / 2 + off, d = 0.2 * W;
+    return 'M' + (cx - Ri) + ',' + (cy + d) + ' L' + (cx - Ri) + ',' + cy +
+           ' A' + Ri + ',' + Ri + ' 0 0 1 ' + (cx + Ri) + ',' + cy +
+           ' L' + (cx + Ri) + ',' + (cy + d);
   }
 
   /* Left edge of the aperture at the top of the viewport. The left boundary is
@@ -923,8 +924,10 @@ button{font:inherit;border-radius:0;}
     var vw = document.documentElement.clientWidth || window.innerWidth;
     var vh = window.innerHeight;
     G.vw = vw; G.vh = vh;
-    G.W0 = Math.min(0.65 * vw, 1500);
     var navBottom = vw < 760 ? 80 : 100;                 // nav height + 8
+    /* 65 % of the width, but never so wide that the springing line crowds the
+       fold: the inscription starts on the straight sides below it */
+    G.W0 = Math.min(0.65 * vw, 1500, (vh - navBottom) / 0.854);
     G.A0 = Math.max(0.36 * vh, navBottom + 0.234 * G.W0); // lockup block + gap
     G.H0 = vh - G.A0;
     G.L0 = (vw - G.W0) / 2;
@@ -933,7 +936,7 @@ button{font:inherit;border-radius:0;}
     G.L1 = (vw - G.W1) / 2;
     G.H1 = vh - G.A1;
     G.off = Math.max(10, 0.024 * G.W0);   /* the inscription hugs the arch */
-    G.fs  = Math.max(15, 0.055 * G.W0);
+    G.fs  = Math.max(15, 0.057 * G.W0);
     G.tr  = Math.max(0.9, 0.0035 * G.W0);
     document.documentElement.style.setProperty('--W', G.W0 + 'px');
   }
@@ -1107,8 +1110,8 @@ button{font:inherit;border-radius:0;}
 
     tl.fromTo(state, { g: 0 }, { g: 1, duration: 0.55, onUpdate: paintArch }, 0)
       .fromTo(imgWide, { opacity: 0 }, { opacity: 1, duration: 0.40 }, 0.12)
-      .fromTo(inscL, { attr: { startOffset: '44%' } }, { attr: { startOffset: '34%' }, duration: 0.35 }, 0)
-      .fromTo(inscR, { attr: { startOffset: '56%' } }, { attr: { startOffset: '66%' }, duration: 0.35 }, 0)
+      .fromTo(inscL, { attr: { startOffset: '40%' } }, { attr: { startOffset: '30%' }, duration: 0.35 }, 0)
+      .fromTo(inscR, { attr: { startOffset: '60%' } }, { attr: { startOffset: '70%' }, duration: 0.35 }, 0)
       /* autoAlpha, not opacity: at 0 it also sets visibility hidden, so the
          viewport-sized blur filter stops being composited for the rest of the
          scroll instead of sitting on a transparent layer. */
@@ -1522,8 +1525,8 @@ button{font:inherit;border-radius:0;}
     gsap.set(parch,   { opacity: reduced ? 1 : 0 });
     gsap.set(insc2,   { opacity: reduced ? 1 : 0 });
     gsap.set(plockIn, { opacity: reduced ? 1 : 0, y: 0 });
-    gsap.set(inscL2, { attr: { startOffset: reduced ? '44%' : '20%' } });
-    gsap.set(inscR2, { attr: { startOffset: reduced ? '56%' : '80%' } });
+    gsap.set(inscL2, { attr: { startOffset: reduced ? '40%' : '20%' } });
+    gsap.set(inscR2, { attr: { startOffset: reduced ? '60%' : '80%' } });
     if (!reduced) gsap.set(plockIn, { y: 24 });
   }
 
@@ -1640,8 +1643,8 @@ button{font:inherit;border-radius:0;}
       .to(plockIn, { y: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 1.8)
       .to(nav, { yPercent: 0, duration: 0.6, ease: 'power3.out', overwrite: 'auto' }, 1.8)
       .to(curRing, { scale: RING_BASE, opacity: cursorOn ? 1 : 0, duration: 0.5, ease: 'power3.out', overwrite: 'auto' }, 1.8)
-      .to(inscL2, { attr: { startOffset: '44%' }, duration: 0.9, ease: 'power3.out' }, 1.85)
-      .to(inscR2, { attr: { startOffset: '56%' }, duration: 0.9, ease: 'power3.out' }, 1.85)
+      .to(inscL2, { attr: { startOffset: '40%' }, duration: 0.9, ease: 'power3.out' }, 1.85)
+      .to(inscR2, { attr: { startOffset: '60%' }, duration: 0.9, ease: 'power3.out' }, 1.85)
       .to(insc2, { opacity: 1, duration: 0.9, ease: 'power2.out' }, 1.85);
   }
 
@@ -1875,8 +1878,8 @@ button{font:inherit;border-radius:0;}
         gsap.set([insc, lockup, hint, nav, mark, word, grp, est], { opacity: 1, clearProps: 'transform,clipPath,letterSpacing' });
         gsap.set(archPhoto, { opacity: 1 });
         if (sheen) gsap.set(sheen, { opacity: 0 });
-        gsap.set(inscL, { attr: { startOffset: '44%' } });
-        gsap.set(inscR, { attr: { startOffset: '56%' } });
+        gsap.set(inscL, { attr: { startOffset: '40%' } });
+        gsap.set(inscR, { attr: { startOffset: '60%' } });
         document.documentElement.style.overflow = '';
         [loader, ldUI].forEach(function (el) { if (el && el.parentNode) el.parentNode.removeChild(el); });
         buildHero();
@@ -1920,10 +1923,10 @@ button{font:inherit;border-radius:0;}
           onUpdate: function () { ldNum.textContent = Math.round(c.v); } }, 0.2)
         .to([ldLine, ldNum], { opacity: 0, duration: 0.3, ease: 'power2.in' }, 1.42)
         .to(state, { g: 0, duration: 0.95, ease: 'power3.inOut', onUpdate: paintArch }, 1.45)
-        .fromTo(inscL, { attr: { startOffset: '32%' } },
-          { attr: { startOffset: '44%' }, duration: 0.9, ease: 'power3.out' }, 1.8)
-        .fromTo(inscR, { attr: { startOffset: '68%' } },
-          { attr: { startOffset: '56%' }, duration: 0.9, ease: 'power3.out' }, 1.8)
+        .fromTo(inscL, { attr: { startOffset: '28%' } },
+          { attr: { startOffset: '40%' }, duration: 0.9, ease: 'power3.out' }, 1.8)
+        .fromTo(inscR, { attr: { startOffset: '72%' } },
+          { attr: { startOffset: '60%' }, duration: 0.9, ease: 'power3.out' }, 1.8)
         .to(insc, { opacity: 1, duration: 0.7, ease: 'power2.out' }, 1.85)
         .to([nav, hint], { opacity: 1, duration: 0.5, ease: 'power2.out' }, 2.15);
     })();
