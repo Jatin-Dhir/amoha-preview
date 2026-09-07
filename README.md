@@ -14,7 +14,8 @@ scrolling opens that arch until the whole screen is the estate.
 - Watch the loading moment: the mark lights up, the wordmark writes itself, a hairline fills, then the arch opens from its apex. Then scroll: the arch opens wide and the vision statement writes itself.
 - Keep scrolling: the stats count up and each section slides over the previous one.
 - Hover a project in "The projects" and the arch on the right fills with it; click **Amoha Leaf** to go through the arch into its page.
-- On the project page, drag the clubhouse strip; use **Back to projects** in the top bar (or Escape) to return.
+- The project page opens on scroll too: the arch fills the screen, the facts count up, the clubhouse strip drags, and the enquiry block closes the page. Use **Back to projects** in the top bar (or Escape) to return.
+- Open **Menu** (top right, or the two-line control on a phone) for the overlay with the project list and its own arch.
 
 ![Hover, expand, contract, project page](assets/preview-transition.jpg)
 
