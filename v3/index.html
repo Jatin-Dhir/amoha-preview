@@ -1297,6 +1297,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
      refresh(),                // relayout + ScrollTrigger.refresh + revealSafety
 
      hero: { rect(), frame(i) }   // SET BY 20-hero.js, null until then
+
+     // the page's ONE WebGLRenderer, on ONE canvas (#dust) --------------------
+     ensureGL()                // builds it on first use, or returns null
+                               // (reduced motion / coarse pointer / no THREE)
+     gl: { renderer, canvas, dpr, owner,
+           add(fn) -> off,     // per-frame callback on the one GSAP ticker
+           remove(fn), clear(),
+           claim(key, host),   // move the canvas into host; you now own it
+           release(key) }      // give it back and clear it
+       The dust (30-sections) and the projects' planes (40-projects) are never
+       on screen together, so they take turns holding the same surface instead
+       of running a context each.
    }
 
    G = { vw, vh, W0, A0, H0, L0, W1, A1, H1, L1, off, fs, tr }
@@ -2013,11 +2025,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     var h = $('.contact-h', contact);
     var rest = [$('.sub', contact), $('.details', contact), $('.form', contact), $('.footer', contact)]
       .filter(Boolean);
-    var lines = h ? split(h) : [];
+    /* under reduced motion nothing reveals, so the headline is left as plain
+       text: splitting it would only freeze a line grouping we never animate */
     if (reduced) return;
-    if (lines.length) gsap.set(lines, { yPercent: 110 });
     gsap.set(rest, { opacity: 0, y: 26 });
+    /* The split is deferred to the reveal on purpose. A "lines" split freezes
+       the line grouping at the moment it runs, and at parse time the display
+       face has not arrived: the fallback fits one more word per line, so the
+       headline would later re-wrap INSIDE its masks and strand an orphan.
+       By the time the contact block is on screen, Bodoni is up. */
     whenSeen(contact, 'top 78%', function () {
+      var lines = h ? split(h) : [];
+      if (lines.length) gsap.set(lines, { yPercent: 110 });
       var tl = gsap.timeline();
       if (lines.length) tl.to(lines, { yPercent: 0, duration: 1.0, ease: 'power4.out', stagger: 0.11 }, 0);
       tl.to(rest, { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.07 }, 0.18);
@@ -3190,7 +3209,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 ;
 /* ============================================================================
    AMOHA v3 — 40-projects.js
-   The PROJECTS module: the horizontal "three worlds" (pin + drag + WebGL
+   The PROJECTS module: the horizontal "worlds" (pin + drag + WebGL
    image distortion), the through-the-arch transition, and the Amoha Leaf
    project page.
 
@@ -3199,8 +3218,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
    falls back to a local implementation of each so the module still runs
    against bare GSAP/ScrollTrigger globals.
 
-   Exposes, when it has to create one: AMOHA.gl = { renderer, canvas, add(fn),
-   remove(fn) } — a single WebGLRenderer driven by the one GSAP ticker.
+   The WebGL here is NOT ours: 10-core.js owns the page's single renderer and
+   its single canvas (AMOHA.ensureGL / AMOHA.gl). We claim that surface for the
+   length of the worlds' pin — it moves into #worlds and the gold dust gets it
+   back afterwards — and we draw only while we hold it.
    ========================================================================== */
 (function () {
   'use strict';
@@ -3364,7 +3385,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   }
 
   /* =========================================================================
-     THE LEAD — "The projects" / "Three developments, one vision." reveals by
+     THE LEAD — "The projects" / "Four developments, one vision." reveals by
      line before the pin.
      ========================================================================= */
   function buildLead() {
@@ -3404,7 +3425,6 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     GL = svc;
     return GL;
   }
-  function glCanvasEl() { return GL ? GL.canvas : null; }
 
   /* =========================================================================
      THE THREE WORLDS
