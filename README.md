@@ -11,7 +11,7 @@ scrolling opens that arch until the whole screen is the estate.
 
 ## What to try
 
-- Let the loader draw the arch, then scroll: the arch opens, the estate settles, the vision statement writes itself.
+- The hero assembles itself on load, then scroll: the arch opens and the vision statement writes itself.
 - Keep scrolling: the stats count up and each section slides over the previous one.
 - Hover a project in "The projects" and the arch on the right fills with it; click **Amoha Leaf** to go through the arch into its page.
 - On the project page, drag the clubhouse strip; use **Back to projects** in the top bar (or Escape) to return.
