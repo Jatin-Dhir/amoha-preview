@@ -4,7 +4,7 @@
 **Design boards:** https://jatin-dhir.github.io/amoha-preview/design/
 
 A temporary preview of the new Amoha Group website concept for client review. One idea drives it:
-a clear opening in the dark. The page is black, the only light comes through one pointed arch, and
+a clear opening in the dark. The page is black, the only light comes through one arch, and
 scrolling opens that arch until the whole screen is the estate.
 
 ![The landing hero at 1920 by 1080](assets/preview-hero.jpg)
@@ -25,8 +25,8 @@ Best viewed on a desktop browser at 1440 px wide or more. The phone layout is a 
 ## How it is built
 
 A single `index.html` with no build step. All photographs are inlined as data URIs. Motion is GSAP 3.13
-(ScrollTrigger, Draggable, InertiaPlugin) with Lenis for smooth scrolling; the pointed arch is a CSS
-`clip-path: path()` recomputed from the viewport width (h = 0.55 W, R = 0.5525 W), and the inscription is
+(ScrollTrigger, Draggable, InertiaPlugin) with Lenis for smooth scrolling; the semicircular arch is a CSS
+`clip-path: path()` recomputed from the viewport width (a half circle of radius W/2 on straight sides), and the inscription is
 SVG text on a path offset from the same arch. `prefers-reduced-motion` renders the open state with no pinning.
 
 `design/index.html` is a static gallery of the sixteen design boards (rendered images).

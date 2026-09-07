@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="Preview of the Amoha Group landing page: a black ground, one pointed arch, and the estate revealed on scroll.">
+<meta name="description" content="Preview of the Amoha Group landing page: a black ground, one arch, and the estate revealed on scroll.">
 <style>html,body{margin:0;background:#000}</style>
 </head>
 <body>
@@ -852,22 +852,20 @@ button{font:inherit;border-radius:0;}
   var fine    = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   /* =====================================================================
-     ARCH GEOMETRY  (DESIGN.md: h = 0.55W below apex, R = 0.5525W)
+     ARCH GEOMETRY  (DESIGN.md: a semicircle, R = h = W/2, on straight sides)
      ===================================================================== */
   var G = {};
 
   function archPathLocal(W, H) {         // origin at the box's top-left, apex at (W/2, 0)
-    var R = 0.5525 * W, S = 0.55 * W;
+    var R = W / 2, S = W / 2;
     return 'M0,' + H + ' L0,' + S +
-           ' A' + R + ',' + R + ' 0 0 1 ' + (W / 2) + ',0' +
            ' A' + R + ',' + R + ' 0 0 1 ' + W + ',' + S +
            ' L' + W + ',' + H + ' Z';
   }
 
   function archPathViewport(W, apexY) {  // same arch, drawn in viewport coordinates
-    var L = (G.vw - W) / 2, R = 0.5525 * W, S = apexY + 0.55 * W, B = G.vh;
+    var L = (G.vw - W) / 2, R = W / 2, S = apexY + W / 2, B = G.vh;
     return 'M' + L + ',' + B + ' L' + L + ',' + S +
-           ' A' + R + ',' + R + ' 0 0 1 ' + (L + W / 2) + ',' + apexY +
            ' A' + R + ',' + R + ' 0 0 1 ' + (L + W) + ',' + S +
            ' L' + (L + W) + ',' + B + ' Z';
   }
@@ -875,33 +873,30 @@ button{font:inherit;border-radius:0;}
   /* Open stroke versions of the same arch: bottom-left, up over the apex, down
      to the bottom-right. The direction matters: the loader draws along it. */
   function archOutlineLocal(W, H) {
-    var i = 0.5, R = 0.5525 * W, S = 0.55 * W;
+    var i = 0.5, R = W / 2 - i, S = W / 2;
     return 'M' + i + ',' + H + ' L' + i + ',' + S +
-           ' A' + R + ',' + R + ' 0 0 1 ' + (W / 2) + ',' + i +
            ' A' + R + ',' + R + ' 0 0 1 ' + (W - i) + ',' + S +
            ' L' + (W - i) + ',' + H;
   }
 
   function archOutlineViewport(W, apexY) {
-    var L = (G.vw - W) / 2, R = 0.5525 * W, S = apexY + 0.55 * W, B = G.vh;
+    var L = (G.vw - W) / 2, R = W / 2, S = apexY + W / 2, B = G.vh;
     return 'M' + L + ',' + B + ' L' + L + ',' + S +
-           ' A' + R + ',' + R + ' 0 0 1 ' + (L + W / 2) + ',' + apexY +
            ' A' + R + ',' + R + ' 0 0 1 ' + (L + W) + ',' + S +
            ' L' + (L + W) + ',' + B;
   }
 
-  function inscriptionPath(W, apexY, off) {   // the same two arcs, offset outward
-    var L = (G.vw - W) / 2, Ri = 0.5525 * W + off, S = apexY + 0.55 * W;
-    return 'M' + (L - off) + ',' + S +
-           ' A' + Ri + ',' + Ri + ' 0 0 1 ' + (L + W / 2) + ',' + (apexY - off) +
-           ' A' + Ri + ',' + Ri + ' 0 0 1 ' + (L + W + off) + ',' + S;
+  function inscriptionPath(W, apexY, off) {   // the same semicircle, offset outward: the text hugs it
+    var cx = G.vw / 2, cy = apexY + W / 2, Ri = W / 2 + off;
+    return 'M' + (cx - Ri) + ',' + cy +
+           ' A' + Ri + ',' + Ri + ' 0 0 1 ' + (cx + Ri) + ',' + cy;
   }
 
   /* Left edge of the aperture at the top of the viewport. The left boundary is
      monotonic in y, so this single value decides whether the arch has swallowed
      the whole screen. */
   function leftEdgeAtTop(vw, W, apexY) {
-    var L = (vw - W) / 2, R = 0.5525 * W, S = apexY + 0.55 * W;
+    var L = (vw - W) / 2, R = W / 2, S = apexY + W / 2;
     if (S <= 0) return L;
     var d = R * R - S * S;
     return d > 0 ? (L + R) - Math.sqrt(d) : Infinity;
@@ -937,9 +932,9 @@ button{font:inherit;border-radius:0;}
     G.W1 = coveringWidth(vw, vh, G.A1, G.W0 * 3.62);
     G.L1 = (vw - G.W1) / 2;
     G.H1 = vh - G.A1;
-    G.off = Math.max(18, 0.0553 * G.W0);
-    G.fs  = Math.max(15, 0.0596 * G.W0);
-    G.tr  = Math.max(0.9, 0.00425 * G.W0);
+    G.off = Math.max(10, 0.024 * G.W0);   /* the inscription hugs the arch */
+    G.fs  = Math.max(15, 0.055 * G.W0);
+    G.tr  = Math.max(0.9, 0.0035 * G.W0);
     document.documentElement.style.setProperty('--W', G.W0 + 'px');
   }
 
