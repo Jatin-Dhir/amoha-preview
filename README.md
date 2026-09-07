@@ -1,36 +1,15 @@
-# Amoha Group landing page, client preview
+# Amoha Group, landing page preview (v3)
 
-**Live preview:** https://jatin-dhir.github.io/amoha-preview/
-**Design boards:** https://jatin-dhir.github.io/amoha-preview/design/
+Live preview: https://jatin-dhir.github.io/amoha-preview/
+Previous version for comparison: https://jatin-dhir.github.io/amoha-preview/v2/
+Design boards (v2 direction): https://jatin-dhir.github.io/amoha-preview/design/
 
-A temporary preview of the new Amoha Group website concept for client review. One idea drives it:
-a clear opening in the dark. The page is black, the only light comes through one arch, and
-scrolling opens that arch until the whole screen is the estate.
-
-![The landing hero at 1920 by 1080](assets/preview-hero.jpg)
-
-## What to try
-
-- Watch the loading moment: the mark lights up, the wordmark writes itself, a hairline fills, then the arch opens from its apex. Then scroll: the arch opens wide and the vision statement writes itself.
-- Keep scrolling: the stats count up and each section slides over the previous one.
-- Hover a project in "The projects" and the arch on the right fills with it; click **Amoha Leaf** to go through the arch into its page.
-- The project page opens on scroll too: the arch fills the screen, the facts count up, the clubhouse strip drags, and the enquiry block closes the page. Use **Back to projects** in the top bar (or Escape) to return.
-- Open **Menu** (top right, or the two-line control on a phone) for the overlay with the project list and its own arch.
-
-![Hover, expand, contract, project page](assets/preview-transition.jpg)
-
-Best viewed on a desktop browser at 1440 px wide or more. The phone layout is a simpler single column with the same hero.
-
-![Phone view](assets/preview-phone.jpg)
-
-## How it is built
-
-A single `index.html` with no build step. All photographs are inlined as data URIs. Motion is GSAP 3.13
-(ScrollTrigger, Draggable, InertiaPlugin) with Lenis for smooth scrolling; the semicircular arch is a CSS
-`clip-path: path()` recomputed from the viewport width (a half circle of radius W/2 on straight sides), and the inscription is
-SVG text on a path offset from the same arch. `prefers-reduced-motion` renders the open state with no pinning.
-
-`design/index.html` is a static gallery of the sixteen design boards (rendered images).
+A motion prototype of the Amoha Group landing page, built as a single page with GSAP, ScrollTrigger, Lenis smooth scroll and
+Three.js. The idea: from a line on paper to a hundred and seventy acres. The hero holds the client's own pencil sketch of the
+Amoha Leaf gateway inside a semicircular arch; scrolling draws it into the finished render (a 40-frame sequence taken from the
+client's video) while the arch opens across the screen. Below it: giant numerals that land one by one, the company's slogans
+written across the screen over the Sanskrit word for clarity, a horizontal world of four projects with cursor-driven image
+distortion, and a through-the-arch transition into the Amoha Leaf project page.
 
 ## Run locally
 
@@ -38,17 +17,20 @@ SVG text on a path offset from the same arch. `prefers-reduced-motion` renders t
 python -m http.server 4173
 ```
 
-Then open http://127.0.0.1:4173/ (the page must be served with a doctype-bearing document, which this file is).
+Then open http://localhost:4173/ (the page needs a server because of the frame files and fonts).
 
-## Network dependencies
+## Structure
 
-- Fonts from Google Fonts (Cinzel, Cormorant Garamond, Plus Jakarta Sans, Tiro Devanagari Sanskrit)
-- GSAP 3.13.0 from cdnjs.cloudflare.com; Lenis 1.1.18 from cdn.jsdelivr.net
+- `index.html`, `frames/`, `img/`: the v3 prototype (built from the modular source in the working project by `build.mjs`)
+- `v2/index.html`: the previous, quieter version (everything inline)
+- `design/`: static renders of the v2 design boards
 
-## Content status
+## Dependencies at runtime
 
-Copy and figures come from Amoha Group's own material (170+ acres, 1,000+ customers, established 2021, founders with
-20+ years). Facts shown in square brackets are placeholders awaiting the client. Photographs and renders are taken from
-the client's existing Amoha Leaf and Amoha Group sites as placeholders and will be replaced.
+Google Fonts (Bodoni Moda, Cinzel, Plus Jakarta Sans, Tiro Devanagari Sanskrit), GSAP 3.13 and Three.js 0.158 from cdnjs,
+Lenis 1.1.18 from jsDelivr. No build step is needed to view the page.
 
-This repository exists only for viewing the preview. No reuse rights are granted.
+## Notes
+
+Photographs, renders and the sketch sequence come from the client's existing sites and video and are placeholders until final
+assets arrive. Facts in [brackets] are unconfirmed. Not for indexing (noindex).
